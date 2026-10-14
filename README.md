@@ -44,3 +44,7 @@ The site is hosted for free on GitHub Pages. The workflow in
 1. Buy a domain and set `site` in `astro.config.mjs` to it.
 2. Add a `public/CNAME` file containing the domain.
 3. Enter the domain in **Settings → Pages → Custom domain** and add the DNS records GitHub shows.
+
+## Other projects in this repo
+
+- [`qr-ordering/`](qr-ordering/README.md): QR-code restaurant ordering system (React + Python + MySQL + Stripe). It isn't part of the website build.

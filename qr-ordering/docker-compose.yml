@@ -1,0 +1,16 @@
+# Local MySQL for development:  docker compose up -d
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: qr_ordering
+      MYSQL_USER: qr_user
+      MYSQL_PASSWORD: qr_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
