@@ -1,0 +1,175 @@
+---
+import '../styles/global.css';
+import { profile } from '../data/resume';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = `${profile.name} (${profile.nickname}) — Software Engineer Portfolio`,
+  description = profile.tagline,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={profile.name} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#07070d" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script is:inline>
+      document.documentElement.classList.remove('no-js');
+    </script>
+  </head>
+  <body>
+    <div class="scroll-progress" aria-hidden="true"></div>
+    <div class="cursor-glow" aria-hidden="true"></div>
+    <slot />
+
+    <style is:global>
+      .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        z-index: 100;
+        background: var(--gradient);
+        transform-origin: 0 50%;
+        transform: scaleX(var(--progress, 0));
+      }
+
+      .cursor-glow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 600px;
+        height: 600px;
+        margin: -300px 0 0 -300px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(139, 92, 246, 0.1), transparent 60%);
+        pointer-events: none;
+        z-index: -1;
+        transform: translate(var(--cx, -999px), var(--cy, -999px));
+        transition: transform 0.25s ease-out;
+      }
+
+      @media (hover: none) {
+        .cursor-glow {
+          display: none;
+        }
+      }
+    </style>
+
+    <script>
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Scroll-triggered reveal
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in');
+              revealObserver.unobserve(entry.target);
+            }
+          }
+        },
+        { threshold: 0.15, rootMargin: '0px 0px -60px 0px' },
+      );
+      document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+
+      // Count-up numbers
+      const counterObserver = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            const el = entry.target as HTMLElement;
+            counterObserver.unobserve(el);
+            const target = Number(el.dataset.count);
+            const decimals = Number(el.dataset.decimals ?? 0);
+            if (reduceMotion) {
+              el.textContent = target.toFixed(decimals);
+              continue;
+            }
+            const duration = 1800;
+            const start = performance.now();
+            const tick = (now: number) => {
+              const t = Math.min((now - start) / duration, 1);
+              const eased = 1 - Math.pow(1 - t, 4);
+              el.textContent = (target * eased).toFixed(decimals);
+              if (t < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          }
+        },
+        { threshold: 0.6 },
+      );
+      document.querySelectorAll('[data-count]').forEach((el) => counterObserver.observe(el));
+
+      // Scroll progress bar
+      const root = document.documentElement;
+      const updateProgress = () => {
+        const max = root.scrollHeight - root.clientHeight;
+        root.style.setProperty('--progress', String(max > 0 ? root.scrollTop / max : 0));
+      };
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      updateProgress();
+
+      // Cursor glow + card spotlight
+      if (!reduceMotion) {
+        window.addEventListener(
+          'pointermove',
+          (e) => {
+            root.style.setProperty('--cx', `${e.clientX}px`);
+            root.style.setProperty('--cy', `${e.clientY}px`);
+          },
+          { passive: true },
+        );
+      }
+      document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
+        card.addEventListener('pointermove', (e) => {
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+          card.style.setProperty('--my', `${e.clientY - rect.top}px`);
+        });
+      });
+
+      // 3D tilt on elements marked data-tilt
+      if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
+        document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((el) => {
+          el.addEventListener('pointermove', (e) => {
+            const rect = el.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            el.style.transform = `perspective(900px) rotateX(${-y * 6}deg) rotateY(${x * 6}deg) translateY(-6px)`;
+          });
+          el.addEventListener('pointerleave', () => {
+            el.style.transform = '';
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

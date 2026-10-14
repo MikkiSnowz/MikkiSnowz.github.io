@@ -1,0 +1,164 @@
+---
+import { projects } from '../data/resume';
+---
+
+<section class="section" id="projects">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">02 · Projects</span>
+      <h2 class="section-title">Things I've <span class="gradient-text">built.</span></h2>
+    </div>
+
+    <div class="list">
+      {
+        projects.map((p, i) => (
+          <article class={`card project reveal ${i % 2 ? 'from-right' : 'from-left'}`} data-tilt>
+            <div class="top">
+              <span class="icon" aria-hidden="true">
+                {p.icon}
+              </span>
+              <span class="index">0{i + 1}</span>
+            </div>
+            <h3>{p.title}</h3>
+            <ul class="tags">
+              {p.tech.map((t) => (
+                <li class="tag">{t}</li>
+              ))}
+            </ul>
+            <ul class="points">
+              {p.points.map((pt) => (
+                <li>{pt}</li>
+              ))}
+            </ul>
+            {p.link && (
+              <a class="link" href={p.link} target="_blank" rel="noopener">
+                View on GitHub <span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .project:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .project {
+    padding: 34px;
+  }
+
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+
+  .icon {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    font-size: 1.6rem;
+    border-radius: 14px;
+    background: rgba(139, 92, 246, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.25);
+    transition: transform 0.6s var(--ease);
+  }
+
+  .project:hover .icon {
+    transform: rotate(-10deg) scale(1.1);
+  }
+
+  .index {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 2.4rem;
+    font-weight: 500;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.16);
+  }
+
+  h3 {
+    margin: 0 0 14px;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .points {
+    margin: 20px 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 12px;
+  }
+
+  .project:first-child .points {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 32px;
+  }
+
+  .points li {
+    position: relative;
+    padding-left: 22px;
+    color: var(--muted);
+    font-size: 0.98rem;
+  }
+
+  .points li::before {
+    content: '▹';
+    position: absolute;
+    left: 0;
+    color: var(--accent-2);
+  }
+
+  .link {
+    display: inline-flex;
+    gap: 6px;
+    margin-top: 24px;
+    font-weight: 600;
+    color: var(--accent-2);
+    position: relative;
+  }
+
+  .link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s var(--ease);
+  }
+
+  .link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  @media (max-width: 860px) {
+    .list {
+      grid-template-columns: 1fr;
+    }
+
+    .project:first-child .points {
+      grid-template-columns: 1fr;
+    }
+
+    .project {
+      padding: 26px;
+    }
+  }
+</style>

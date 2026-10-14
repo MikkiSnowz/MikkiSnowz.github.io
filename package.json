@@ -1,0 +1,19 @@
+{
+  "name": "sahatpatanankatham-portfolio",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portfolio website for Sahatpat Anankatham (Mikki) — sahatpatanankatham.com",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^7.3.8"
+  }
+}

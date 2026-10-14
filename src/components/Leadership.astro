@@ -1,0 +1,146 @@
+---
+import { leadership } from '../data/resume';
+---
+
+<section class="section" id="leadership">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">03 · Leadership</span>
+      <h2 class="section-title">Extracurriculars &amp; <span class="gradient-text">leadership.</span></h2>
+    </div>
+
+    <div class="timeline">
+      <span class="rail" aria-hidden="true"><span class="rail-fill" id="rail-fill"></span></span>
+      <ol class="entries">
+      {
+        leadership.map((item, i) => (
+          <li class="entry reveal from-right" style={`--i: ${i}`}>
+            <span class="node" aria-hidden="true" />
+            <div class="card">
+              <h3>{item.role}</h3>
+              <p class="org">{item.org}</p>
+              <ul class="points">
+                {item.points.map((pt) => (
+                  <li>{pt}</li>
+                ))}
+              </ul>
+              <ul class="tags">
+                {item.tech.map((t) => (
+                  <li class="tag">{t}</li>
+                ))}
+              </ul>
+            </div>
+          </li>
+        ))
+      }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .timeline {
+    position: relative;
+    padding-left: 48px;
+  }
+
+  .entries {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 32px;
+  }
+
+  .rail {
+    position: absolute;
+    left: 11px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .rail-fill {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(var(--accent), var(--accent-2));
+    transform-origin: top;
+    transform: scaleY(var(--fill, 0));
+  }
+
+  .entry {
+    position: relative;
+  }
+
+  .node {
+    position: absolute;
+    left: -48px;
+    top: 30px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 0 6px rgba(139, 92, 246, 0.12);
+  }
+
+  .node::after {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    border-radius: 50%;
+    background: var(--accent-2);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    letter-spacing: -0.02em;
+  }
+
+  .org {
+    margin: 4px 0 0;
+    color: var(--accent-2);
+    font-weight: 500;
+  }
+
+  .points {
+    margin: 18px 0 20px;
+    padding-left: 20px;
+    color: var(--muted);
+    display: grid;
+    gap: 10px;
+  }
+
+  .points li::marker {
+    color: var(--accent);
+  }
+
+  @media (max-width: 600px) {
+    .timeline {
+      padding-left: 36px;
+    }
+
+    .node {
+      left: -36px;
+    }
+  }
+</style>
+
+<script>
+  // Grow the timeline rail as the section scrolls past
+  const fill = document.getElementById('rail-fill');
+  const timeline = fill?.closest('.timeline') as HTMLElement | null;
+  if (fill && timeline) {
+    const update = () => {
+      const rect = timeline.getBoundingClientRect();
+      const progress = (window.innerHeight * 0.7 - rect.top) / rect.height;
+      fill.style.setProperty('--fill', String(Math.min(Math.max(progress, 0), 1)));
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+</script>

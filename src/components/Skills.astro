@@ -1,0 +1,156 @@
+---
+import { skills } from '../data/resume';
+
+// Doubled so the marquee can loop seamlessly
+const marquee = skills.slice(0, 3).flatMap((g) => g.items);
+---
+
+<section class="section" id="skills">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">05 · Skills</span>
+      <h2 class="section-title">My <span class="gradient-text">toolkit.</span></h2>
+    </div>
+  </div>
+
+  <div class="marquee reveal" aria-hidden="true">
+    <div class="track">
+      {[...marquee, ...marquee].map((s) => <span class="chip">{s}</span>)}
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="grid">
+      {
+        skills.map((g, i) => (
+          <div class="card group reveal" style={`--i: ${i}`}>
+            <h3>{g.group}</h3>
+            <ul class="items">
+              {g.items.map((item, j) => (
+                <li style={`--j: ${j}`}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    margin-bottom: 56px;
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+
+  .track {
+    display: flex;
+    gap: 14px;
+    width: max-content;
+    animation: marquee 40s linear infinite;
+  }
+
+  .marquee:hover .track {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translateX(calc(-50% - 7px));
+    }
+  }
+
+  .chip {
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+
+  .chip:nth-child(3n + 1) {
+    color: #c9c2ff;
+  }
+
+  .chip:nth-child(3n + 2) {
+    color: #a5e3fb;
+  }
+
+  .chip:nth-child(3n) {
+    color: #f9c3df;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  h3 {
+    margin: 0 0 18px;
+    font-size: 1.05rem;
+  }
+
+  .items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .items li {
+    padding: 6px 12px;
+    font-size: 0.88rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 0.5s var(--ease),
+      transform 0.5s var(--ease),
+      border-color 0.3s,
+      color 0.3s;
+    transition-delay: calc(300ms + var(--i, 0) * 110ms + var(--j) * 50ms);
+  }
+
+  .group.in .items li {
+    opacity: 1;
+    transform: none;
+  }
+
+  .items li:hover {
+    border-color: var(--accent);
+    color: #fff;
+    transition-delay: 0ms;
+  }
+
+  :global(.no-js) .items li {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (max-width: 1000px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .items li {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
