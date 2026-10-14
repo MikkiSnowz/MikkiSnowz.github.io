@@ -1,9 +1,9 @@
 {
-  "name": "sahatpatanankatham-portfolio",
+  "name": "mikkisnowz-portfolio",
   "type": "module",
   "version": "1.0.0",
   "private": true,
-  "description": "Portfolio website for Sahatpat Anankatham (Mikki) — sahatpat.anankatham.com",
+  "description": "Portfolio website for Sahatpat Anankatham (Mikki) — mikkisnowz.github.io",
   "engines": {
     "node": ">=22.12.0"
   },

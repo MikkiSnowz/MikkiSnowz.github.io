@@ -1,4 +1,4 @@
-# sahatpat.anankatham.com
+# mikkisnowz.github.io
 
 Personal portfolio for **Sahatpat Anankatham (Mikki)**, built with [Astro](https://astro.build) on Node.js.
 
@@ -28,17 +28,19 @@ npm run build     # outputs static site to dist/
 npm run preview   # serve the built site
 ```
 
-## Deploying to sahatpat.anankatham.com
+## Deploying to mikkisnowz.github.io
 
-The site is static, so any static host works. A GitHub Pages workflow is included
-(`.github/workflows/deploy.yml`) and runs on every push to `main`.
+The site is hosted for free on GitHub Pages. The workflow in
+`.github/workflows/deploy.yml` builds and deploys it on every push to `main`.
 
-1. Buy the domain `anankatham.com` from a registrar (Cloudflare, Namecheap, Porkbun, etc.).
-2. In the GitHub repo, go to **Settings → Pages** and set **Source** to **GitHub Actions**.
-3. `public/CNAME` already contains `sahatpat.anankatham.com`. In **Settings → Pages → Custom domain**, enter the same address.
-4. At your registrar, add one DNS record:
-   - Type `CNAME`, name `sahatpat`, value `mikkisnowz.github.io`
-5. Once DNS has propagated, tick **Enforce HTTPS**.
+1. Name the repository `MikkiSnowz.github.io` (**Settings → General → Repository name**).
+2. Make sure a `main` branch exists and is the default branch.
+3. Go to **Settings → Pages** and set **Source** to **GitHub Actions**.
+4. Push to `main` (or run the workflow from the **Actions** tab). The site goes live at
+   https://mikkisnowz.github.io.
 
-Prefer Cloudflare Pages, Vercel or Netlify? Connect the repo, use build command
-`npm run build` and output directory `dist`, then add the custom domain in their dashboard.
+### Using a custom domain later
+
+1. Buy a domain and set `site` in `astro.config.mjs` to it.
+2. Add a `public/CNAME` file containing the domain.
+3. Enter the domain in **Settings → Pages → Custom domain** and add the DNS records GitHub shows.
