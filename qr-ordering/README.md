@@ -29,19 +29,28 @@ A QR-code ordering system for a local restaurant or café, similar to Abacus Onl
 ### 1. MySQL
 
 ```sh
-docker compose up -d        # MySQL on localhost:3306, db "qr_ordering"
+docker compose up -d
 ```
 
-You can also use any MySQL server you already have: create a database and put its URL in `DATABASE_URL`.
+This starts MySQL on port **3307**, with the database `qr_ordering` and user `qr_user` already created. It uses 3307 so it doesn't clash with a MySQL you may already have on 3306. Wait about 20 seconds for it to start the first time.
+
+To use a MySQL server you already have instead, create the database and user in it, then point `DATABASE_URL` at it:
+
+```sql
+CREATE DATABASE qr_ordering;
+CREATE USER 'qr_user'@'localhost' IDENTIFIED BY 'qr_password';
+GRANT ALL ON qr_ordering.* TO 'qr_user'@'localhost';
+```
 
 ### 2. Backend
 
 ```sh
 cd backend
-python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env        # then fill in your Stripe keys, admin key, etc.
-python seed.py              # creates tables, a sample menu and 5 tables, prints each table's URL
+cp .env.example .env
+python3 seed.py
 uvicorn app.main:app --reload --port 8000
 ```
 
@@ -52,8 +61,8 @@ API docs: http://localhost:8000/docs
 ```sh
 cd frontend
 npm install
-cp .env.example .env        # set VITE_STRIPE_PUBLISHABLE_KEY
-npm run dev                 # http://localhost:5173
+cp .env.example .env
+npm run dev
 ```
 
 - Customer view: open one of the table URLs that `seed.py` printed, e.g. `http://localhost:5173/t/<token>`, or `/takeaway`.
@@ -72,6 +81,12 @@ To try it on your phone, set `FRONTEND_URL` to `http://<your-computer-ip>:5173`,
 3. Pay with the test card `4242 4242 4242 4242`, any future expiry date, and any CVC.
 
 The order status page also checks Stripe directly, so payments still go through locally if the webhook isn't running. Run the webhook in production anyway.
+
+### Something not working?
+
+Open http://localhost:8000/api/health. It reports whether the backend can reach MySQL and, if it can't, what to fix (MySQL not running, wrong password, tables not created yet). The frontend shows the same messages instead of a bare error code.
+
+On macOS, the terminal doesn't ignore `# comments` you paste after a command, so copy only the command itself.
 
 ### Tests
 

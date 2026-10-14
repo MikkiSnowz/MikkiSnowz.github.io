@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    database_url: str = "mysql+pymysql://qr_user:qr_password@localhost:3306/qr_ordering"
+    database_url: str = "mysql+pymysql://qr_user:qr_password@127.0.0.1:3307/qr_ordering"
 
     business_name: str = "My Local Cafe"
     currency: str = "aud"

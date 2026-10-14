@@ -8,7 +8,8 @@ services:
       MYSQL_PASSWORD: qr_password
       MYSQL_ROOT_PASSWORD: root_password
     ports:
-      - "3306:3306"
+      # 3307 on your computer, so it doesn't clash with a MySQL you already have installed.
+      - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
 

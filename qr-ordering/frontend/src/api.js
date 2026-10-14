@@ -1,12 +1,23 @@
 const BASE = import.meta.env.VITE_API_URL || '';
 
+const UNREACHABLE = "Can't reach the backend. Make sure it's running (uvicorn on port 8000).";
+
 async function request(path, { method = 'GET', body, headers = {} } = {}) {
-  const res = await fetch(`${BASE}${path}`, {
-    method,
-    headers: { ...(body ? { 'Content-Type': 'application/json' } : {}), ...headers },
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  let res;
+  try {
+    res = await fetch(`${BASE}${path}`, {
+      method,
+      headers: { ...(body ? { 'Content-Type': 'application/json' } : {}), ...headers },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    throw new Error(UNREACHABLE);
+  }
   if (!res.ok) {
+    const isJson = res.headers.get('content-type')?.includes('application/json');
+    // The backend always answers errors with JSON; anything else is the dev proxy
+    // failing to reach it.
+    if (!isJson && res.status >= 500) throw new Error(UNREACHABLE);
     let message = `Request failed (${res.status})`;
     try {
       const data = await res.json();
